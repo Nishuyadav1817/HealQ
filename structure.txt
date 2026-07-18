@@ -1,0 +1,178 @@
+.
+|-- .gitignore
+|-- README.md
+|-- backend
+|   |-- .env.example
+|   |-- .gitignore
+|   |-- logs
+|   |   `-- .gitkeep
+|   |-- package.json
+|   |-- server.js
+|   |-- src
+|   |   |-- app.js
+|   |   |-- config
+|   |   |   `-- .gitkeep
+|   |   |-- constants
+|   |   |   `-- .gitkeep
+|   |   |-- errors
+|   |   |   `-- .gitkeep
+|   |   |-- jobs
+|   |   |   `-- .gitkeep
+|   |   |-- middlewares
+|   |   |   `-- .gitkeep
+|   |   |-- modules
+|   |   |   |-- admin
+|   |   |   |   |-- admin.controller.js
+|   |   |   |   |-- admin.model.js
+|   |   |   |   |-- admin.routes.js
+|   |   |   |   |-- admin.service.js
+|   |   |   |   `-- admin.validation.js
+|   |   |   |-- appointments
+|   |   |   |   |-- appointments.controller.js
+|   |   |   |   |-- appointments.model.js
+|   |   |   |   |-- appointments.routes.js
+|   |   |   |   |-- appointments.service.js
+|   |   |   |   `-- appointments.validation.js
+|   |   |   |-- auth
+|   |   |   |   |-- auth.controller.js
+|   |   |   |   |-- auth.model.js
+|   |   |   |   |-- auth.routes.js
+|   |   |   |   |-- auth.service.js
+|   |   |   |   `-- auth.validation.js
+|   |   |   |-- doctorAssistant
+|   |   |   |   |-- doctorAssistant.controller.js
+|   |   |   |   |-- doctorAssistant.model.js
+|   |   |   |   |-- doctorAssistant.routes.js
+|   |   |   |   |-- doctorAssistant.service.js
+|   |   |   |   `-- doctorAssistant.validation.js
+|   |   |   |-- notifications
+|   |   |   |   |-- notifications.controller.js
+|   |   |   |   |-- notifications.model.js
+|   |   |   |   |-- notifications.routes.js
+|   |   |   |   |-- notifications.service.js
+|   |   |   |   `-- notifications.validation.js
+|   |   |   |-- patients
+|   |   |   |   |-- patients.controller.js
+|   |   |   |   |-- patients.model.js
+|   |   |   |   |-- patients.routes.js
+|   |   |   |   |-- patients.service.js
+|   |   |   |   `-- patients.validation.js
+|   |   |   |-- queue
+|   |   |   |   |-- queue.controller.js
+|   |   |   |   |-- queue.model.js
+|   |   |   |   |-- queue.routes.js
+|   |   |   |   |-- queue.service.js
+|   |   |   |   `-- queue.validation.js
+|   |   |   `-- reception
+|   |   |       |-- reception.controller.js
+|   |   |       |-- reception.model.js
+|   |   |       |-- reception.routes.js
+|   |   |       |-- reception.service.js
+|   |   |       `-- reception.validation.js
+|   |   |-- routes
+|   |   |   `-- .gitkeep
+|   |   |-- sockets
+|   |   |   `-- .gitkeep
+|   |   |-- utils
+|   |   |   `-- .gitkeep
+|   |   `-- validators
+|   |       `-- .gitkeep
+|   |-- tests
+|   |   |-- integration
+|   |   |   `-- .gitkeep
+|   |   `-- unit
+|   |       `-- .gitkeep
+|   `-- uploads
+|       `-- .gitkeep
+|-- docker-compose.yml
+|-- frontend
+|   |-- .env.example
+|   |-- .gitignore
+|   |-- index.html
+|   |-- package.json
+|   |-- postcss.config.js
+|   |-- public
+|   |   `-- .gitkeep
+|   |-- src
+|   |   |-- App.jsx
+|   |   |-- assets
+|   |   |   |-- icons
+|   |   |   |   `-- .gitkeep
+|   |   |   `-- images
+|   |   |       `-- .gitkeep
+|   |   |-- components
+|   |   |   |-- common
+|   |   |   |   `-- .gitkeep
+|   |   |   `-- ui
+|   |   |       `-- .gitkeep
+|   |   |-- constants
+|   |   |   `-- .gitkeep
+|   |   |-- context
+|   |   |   `-- .gitkeep
+|   |   |-- features
+|   |   |   |-- admin
+|   |   |   |   |-- components
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- hooks
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- pages
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   `-- services
+|   |   |   |       `-- .gitkeep
+|   |   |   |-- auth
+|   |   |   |   |-- components
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- hooks
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- pages
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   `-- services
+|   |   |   |       `-- .gitkeep
+|   |   |   |-- doctorAssistant
+|   |   |   |   |-- components
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- hooks
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- pages
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   `-- services
+|   |   |   |       `-- .gitkeep
+|   |   |   |-- patient
+|   |   |   |   |-- components
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- hooks
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   |-- pages
+|   |   |   |   |   `-- .gitkeep
+|   |   |   |   `-- services
+|   |   |   |       `-- .gitkeep
+|   |   |   `-- reception
+|   |   |       |-- components
+|   |   |       |   `-- .gitkeep
+|   |   |       |-- hooks
+|   |   |       |   `-- .gitkeep
+|   |   |       |-- pages
+|   |   |       |   `-- .gitkeep
+|   |   |       `-- services
+|   |   |           `-- .gitkeep
+|   |   |-- hooks
+|   |   |   `-- .gitkeep
+|   |   |-- index.css
+|   |   |-- layouts
+|   |   |   `-- .gitkeep
+|   |   |-- main.jsx
+|   |   |-- routes
+|   |   |   `-- .gitkeep
+|   |   |-- services
+|   |   |   `-- .gitkeep
+|   |   |-- sockets
+|   |   |   `-- .gitkeep
+|   |   |-- store
+|   |   |   `-- .gitkeep
+|   |   `-- utils
+|   |       `-- .gitkeep
+|   |-- tailwind.config.js
+|   `-- vite.config.js
+`-- structure.txt
+
+70 directories, 106 files
