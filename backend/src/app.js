@@ -50,7 +50,12 @@ app.use(compression());
 if (config.env !== 'test') {
   app.use(morgan(config.env === 'development' ? 'dev' : 'combined'));
 }
-
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "API is running 🚀"
+  });
+});
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok', env: config.env }));
 
 app.use('/api/v1', routes);
