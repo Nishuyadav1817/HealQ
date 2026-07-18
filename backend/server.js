@@ -18,7 +18,12 @@ const startServer = async () => {
     console.log(`[server] Running in ${config.env} mode on port ${config.port} (HTTP + Socket.IO)`);
   });
 };
-
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "API is running 🚀"
+  });
+});
 // Safety nets: don't let an unhandled promise rejection or exception leave
 // the process in a corrupted/zombie state.
 process.on('unhandledRejection', (err) => {
