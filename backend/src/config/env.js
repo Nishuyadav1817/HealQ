@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   env: process.env.NODE_ENV || 'development',
-  port: Number(process.env.PORT) || 5000,
+  port: Number(process.env.PORT) || 8989,
   mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/smart-hospital-queue',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
 
