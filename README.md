@@ -229,7 +229,7 @@ If consultations take longer than expected, the system automatically delays the 
 - HTML5
 - CSS3
 - JavaScript (ES6)
-- Tailwind CSS / Bootstrap
+- Tailwind CSS 
 
 ## Backend
 
