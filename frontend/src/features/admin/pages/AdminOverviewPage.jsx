@@ -5,6 +5,14 @@ import { useAnalytics } from '../hooks/useAnalytics';
 import AppointmentsTrendChart from '../components/charts/AppointmentsTrendChart';
 import StatusBreakdownChart from '../components/charts/StatusBreakdownChart';
 import RevenueTrendChart from '../components/charts/RevenueTrendChart';
+import {
+  HospitalIcon,
+  DoctorIcon,
+  PatientsIcon,
+  CalendarIcon,
+  QueueIcon,
+  RevenueIcon,
+} from '../components/icons/AdminIcons';
 
 const formatCurrency = (value) => `₹${(value ?? 0).toLocaleString('en-IN')}`;
 
@@ -28,20 +36,41 @@ const AdminOverviewPage = () => {
 
       {summary && (
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          <StatCard label="Hospitals" value={summary.hospitals.active} hint={`${summary.hospitals.total} total`} />
-          <StatCard label="Doctors" value={summary.doctors.active} hint={`${summary.doctors.total} total`} />
-          <StatCard label="Patients" value={summary.patients.total} />
+          <StatCard
+            label="Hospitals"
+            value={summary.hospitals.active}
+            hint={`${summary.hospitals.total} total`}
+            icon={HospitalIcon}
+            tone="admin"
+          />
+          <StatCard
+            label="Doctors"
+            value={summary.doctors.active}
+            hint={`${summary.doctors.total} total`}
+            icon={DoctorIcon}
+            tone="secondary"
+          />
+          <StatCard label="Patients" value={summary.patients.total} icon={PatientsIcon} tone="sky" />
           <StatCard
             label="Appointments Today"
             value={summary.appointments.today}
             trendPct={summary.appointments.trendPct}
             hint="vs. prior week"
+            icon={CalendarIcon}
+            tone="primary"
           />
-          <StatCard label="Active Queues Now" value={summary.activeQueuesToday} />
+          <StatCard
+            label="Active Queues Now"
+            value={summary.activeQueuesToday}
+            icon={QueueIcon}
+            tone="gold"
+          />
           <StatCard
             label="Revenue Today"
             value={formatCurrency(summary.revenue.today)}
             hint={`${formatCurrency(summary.revenue.total)} all-time`}
+            icon={RevenueIcon}
+            tone="primary"
           />
         </div>
       )}

@@ -3,9 +3,14 @@ import Field from '../../../components/ui/Field';
 import Button from '../../../components/ui/Button';
 import { Spinner, EmptyState, ErrorNotice } from '../../../components/ui/StateNotice';
 import { useSearchBooking } from '../hooks/useSearchBooking';
+import { useHospital } from '../hooks/useHospital';
+import { useAuth } from '../../../context/AuthContext';
 import ReceptionAppointmentCard from '../components/ReceptionAppointmentCard';
 
 const SearchBookingPage = () => {
+  const { user } = useAuth();
+  const { data: hospital } = useHospital(user?.hospital);
+
   const [input, setInput] = useState('');
   const [term, setTerm] = useState('');
 
@@ -18,12 +23,18 @@ const SearchBookingPage = () => {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-ink">Search Booking</h1>
+      <p className="text-xs font-semibold uppercase tracking-wide text-role-reception">
+        {hospital?.name || 'Reception'}
+      </p>
+      <h1 className="mt-0.5 text-xl font-semibold text-ink">Search Booking</h1>
       <p className="mt-1 text-sm text-ink-muted">
         Look up any appointment by its booking reference — not limited to today.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-4 flex max-w-md items-end gap-3">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-5 flex max-w-md items-end gap-3 rounded-xl border border-surface-border bg-surface-card p-4 shadow-soft-sm"
+      >
         <Field
           className="flex-1"
           label="Booking number"

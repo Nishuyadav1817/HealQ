@@ -5,7 +5,7 @@
  * never have to know the color mapping themselves.
  */
 const STATUS_STYLES = {
-  pending: 'bg-surface text-ink-muted',
+  pending: 'bg-surface-muted text-ink-muted',
   confirmed: 'bg-role-patient/10 text-role-patient',
   'checked-in': 'bg-role-reception/10 text-role-reception',
   'in-consultation': 'bg-role-doctor/10 text-role-doctor',
@@ -26,10 +26,11 @@ const STATUS_LABELS = {
 
 const Badge = ({ status }) => (
   <span
-    className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
-      STATUS_STYLES[status] || 'bg-surface text-ink-muted'
+    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
+      STATUS_STYLES[status] || 'bg-surface-muted text-ink-muted'
     }`}
   >
+    <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
     {STATUS_LABELS[status] || status}
   </span>
 );

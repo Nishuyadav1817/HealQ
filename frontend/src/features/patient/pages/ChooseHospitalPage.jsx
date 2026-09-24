@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import Field from '../components/ui/PField';
-import { Spinner, EmptyState, ErrorNotice } from '../components/ui/PStateNotice';
+import { EmptyState, ErrorNotice, CardSkeleton } from '../components/ui/PStateNotice';
 import { useHospitals } from '../hooks/useLookups';
 import HospitalCard from '../components/HospitalCard';
 import BookingSteps from '../components/BookingSteps';
+import BookingContextBar from '../components/BookingContextBar';
 import { ROUTES } from '../../../constants/routePaths';
 
 const ChooseHospitalPage = () => {
@@ -28,7 +29,7 @@ const ChooseHospitalPage = () => {
         title="Pick a city first"
         description="We need to know which city to search hospitals in."
         action={
-          <Link to={ROUTES.PATIENT.CHOOSE_CITY} className="text-sm font-medium text-healq-600">
+          <Link to={ROUTES.PATIENT.CHOOSE_CITY} className="text-sm font-medium text-primary-600">
             Choose a city →
           </Link>
         }
@@ -39,7 +40,8 @@ const ChooseHospitalPage = () => {
   return (
     <div>
       <BookingSteps current={2} />
-      <h1 className="font-serif text-2xl font-semibold text-ink">Hospitals in {cityName || 'your city'}</h1>
+      <BookingContextBar items={[{ label: 'City', value: cityName }]} />
+      <h1 className="font-display text-2xl font-semibold text-ink">Hospitals in {cityName || 'your city'}</h1>
       <p className="mt-1 text-sm text-ink-muted">Pick the hospital you'd like to visit.</p>
 
       <div className="mt-4 max-w-sm">
@@ -52,7 +54,13 @@ const ChooseHospitalPage = () => {
       </div>
 
       <div className="mt-6">
-        {isLoading && <Spinner label="Loading hospitals…" />}
+        {isLoading && (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <CardSkeleton key={i} lines={2} />
+            ))}
+          </div>
+        )}
         {isError && <ErrorNotice message="Couldn't load hospitals right now." />}
         {!isLoading && !isError && hospitals?.length === 0 && (
           <EmptyState title="No hospitals found" description="Try a different search term or city." />

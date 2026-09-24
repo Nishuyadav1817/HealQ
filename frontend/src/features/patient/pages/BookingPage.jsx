@@ -7,6 +7,7 @@ import { Spinner, ErrorNotice } from '../components/ui/PStateNotice';
 import { useDoctor } from '../hooks/useLookups';
 import { useBookAppointment } from '../hooks/useAppointments';
 import BookingSteps from '../components/BookingSteps';
+import BookingContextBar from '../components/BookingContextBar';
 import { ROUTES } from '../../../constants/routePaths';
 import { getApiErrorMessage } from '../../../utils/apiError';
 
@@ -16,6 +17,7 @@ const BookingPage = () => {
   const { doctorId } = useParams();
   const [searchParams] = useSearchParams();
   const hospitalId = searchParams.get('hospitalId');
+  const hospitalName = searchParams.get('hospitalName');
   const departmentId = searchParams.get('departmentId');
   const navigate = useNavigate();
 
@@ -64,11 +66,24 @@ const BookingPage = () => {
   return (
     <div>
       <BookingSteps current={4} />
-      <h1 className="font-serif text-2xl font-semibold text-ink">Confirm your appointment</h1>
+      <BookingContextBar
+        items={[
+          { label: 'Hospital', value: hospitalName || doctor?.hospital?.name },
+          { label: 'Doctor', value: doctor?.user?.fullName ? `Dr. ${doctor.user.fullName}` : null },
+        ]}
+      />
+      <h1 className="font-display text-2xl font-semibold text-ink">Confirm your appointment</h1>
 
       <Card className="mt-4">
-        <p className="font-serif text-lg font-semibold text-ink">Dr. {doctor.user?.fullName}</p>
-        <p className="text-sm text-ink-muted">{doctor.specialization}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="font-display text-lg font-semibold text-ink">Dr. {doctor.user?.fullName}</p>
+            <p className="text-sm text-ink-muted">{doctor.specialization}</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-700">
+            ₹{doctor.consultationFee}
+          </span>
+        </div>
         {doctor.hospital?.name && (
           <p className="mt-2 text-sm font-medium text-ink">{doctor.hospital.name}</p>
         )}
@@ -82,7 +97,6 @@ const BookingPage = () => {
         {doctor.hospital?.contact?.phone && (
           <p className="text-xs text-ink-subtle">Hospital contact: {doctor.hospital.contact.phone}</p>
         )}
-        <p className="mt-1 text-xs text-ink-subtle">₹{doctor.consultationFee} consultation fee</p>
       </Card>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-lg space-y-4">

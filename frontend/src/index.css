@@ -2,13 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Design-token mirror as CSS variables — for any spot that needs a raw
+   value outside Tailwind's class scanner (inline SVG fills, Recharts
+   `stroke`/`fill` props, etc). Keep these in sync with tailwind.config.js
+   by hand; there are few enough of them that this is the honest tradeoff
+   documented in tailwind.config.js's `brand` comment history. */
+:root {
+  --color-primary-50: #edfbf3;
+  --color-primary-100: #d3f5e1;
+  --color-primary-300: #72dba3;
+  --color-primary-500: #1d9d63;
+  --color-primary-600: #147d4f;
+  --color-primary-700: #0f6440;
+
+  --color-secondary-500: #1c8c88;
+  --color-secondary-600: #146f6c;
+
+  --color-sky-500: #3b6fe0;
+  --color-sky-600: #2c56b8;
+
+  --color-gold-500: #e8ac1e;
+  --color-gold-600: #c48d0f;
+
+  --color-ink: #12211c;
+  --color-ink-muted: #5b6b63;
+  --color-danger: #d0362c;
+
+  --shadow-soft: 0 2px 8px rgba(18, 33, 28, 0.07), 0 1px 2px rgba(18, 33, 28, 0.05);
+}
+
 @layer base {
   body {
     @apply bg-surface text-ink font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-ink;
   }
 
   /* Visible keyboard focus everywhere — never suppressed, only restyled. */
   :focus-visible {
-    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-surface;
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-surface;
+  }
+
+  ::selection {
+    @apply bg-primary-200 text-primary-900;
+  }
+}
+
+@layer utilities {
+  /* Shared micro-interaction — used across cards, list rows, nav items */
+  .transition-smooth {
+    transition-timing-function: cubic-bezier(0.2, 0.6, 0.2, 1);
   }
 }

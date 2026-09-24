@@ -1,15 +1,12 @@
-import DashboardShell from '../components/common/DashboardShell';
-import { ROUTES } from '../constants/routePaths';
+import ReceptionTopNav from '../features/reception/components/ui/ReceptionTopNav';
 
-const NAV_ITEMS = [
-  { label: 'Dashboard', path: ROUTES.RECEPTION.ROOT, end: true },
-  { label: 'Search Booking', path: `${ROUTES.RECEPTION.ROOT}/search` },
-];
-
-/** Root layout for the Reception panel (Panel 1) — wraps every
- * /reception/* route. */
-const ReceptionLayout = () => (
-  <DashboardShell roleLabel="Reception" accent="reception" navItems={NAV_ITEMS} />
-);
+/**
+ * Root layout for the Reception panel (Panel 1) — wraps every
+ * /reception/* route. Uses its own dedicated shell (ReceptionTopNav),
+ * the same "scope the redesign to one panel" approach the Patient
+ * layout already established with PatientTopNav, so Doctor Assistant
+ * and Admin keep using the shared DashboardShell untouched.
+ */
+const ReceptionLayout = () => <ReceptionTopNav />;
 
 export default ReceptionLayout;

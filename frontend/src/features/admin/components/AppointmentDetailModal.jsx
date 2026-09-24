@@ -32,29 +32,29 @@ const AppointmentDetailModal = ({ isOpen, onClose, appointmentId }) => {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded border border-surface-border bg-surface p-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Patient</p>
               <p className="mt-1 text-sm font-medium text-ink">{appointment.patient?.fullName}</p>
               <p className="text-xs text-ink-subtle">{appointment.patient?.phone}</p>
               <p className="text-xs text-ink-subtle">{appointment.patient?.email}</p>
             </div>
-            <div className="rounded border border-surface-border bg-surface p-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Doctor</p>
               <p className="mt-1 text-sm font-medium text-ink">Dr. {appointment.doctor?.user?.fullName}</p>
               <p className="text-xs text-ink-subtle">{appointment.doctor?.specialization}</p>
             </div>
-            <div className="rounded border border-surface-border bg-surface p-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Hospital</p>
               <p className="mt-1 text-sm font-medium text-ink">{appointment.hospital?.name}</p>
             </div>
-            <div className="rounded border border-surface-border bg-surface p-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Department</p>
               <p className="mt-1 text-sm font-medium text-ink">{appointment.department?.name}</p>
             </div>
           </div>
 
           {(appointment.reasonForVisit || appointment.symptoms?.length > 0) && (
-            <div className="rounded border border-surface-border bg-surface p-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Visit details</p>
               {appointment.reasonForVisit && (
                 <p className="mt-1 text-sm text-ink">{appointment.reasonForVisit}</p>

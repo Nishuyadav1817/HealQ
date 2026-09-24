@@ -15,10 +15,10 @@ const DateRangeSelect = ({ value, onChange }) => (
         key={opt.value}
         type="button"
         onClick={() => onChange(opt.value)}
-        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+        className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-smooth ${
           value === opt.value
-            ? 'bg-role-admin text-white'
-            : 'bg-surface text-ink-muted hover:bg-surface-border'
+            ? 'bg-role-admin text-white shadow-soft-sm'
+            : 'bg-surface-muted text-ink-muted hover:bg-surface-border'
         }`}
       >
         {opt.label}

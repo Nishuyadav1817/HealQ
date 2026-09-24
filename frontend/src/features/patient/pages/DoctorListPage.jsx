@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import Field from '../components/ui/PField';
-import { Spinner, EmptyState, ErrorNotice } from '../components/ui/PStateNotice';
+import { EmptyState, ErrorNotice, CardSkeleton } from '../components/ui/PStateNotice';
 import { useDepartments, useDoctors } from '../hooks/useLookups';
 import DoctorCard from '../components/DoctorCard';
 import BookingSteps from '../components/BookingSteps';
+import BookingContextBar from '../components/BookingContextBar';
 import { ROUTES } from '../../../constants/routePaths';
 
 const DoctorListPage = () => {
@@ -34,7 +35,7 @@ const DoctorListPage = () => {
         title="Pick a hospital first"
         description="We need to know which hospital to search doctors in."
         action={
-          <Link to={ROUTES.PATIENT.CHOOSE_CITY} className="text-sm font-medium text-healq-600">
+          <Link to={ROUTES.PATIENT.CHOOSE_CITY} className="text-sm font-medium text-primary-600">
             Start over →
           </Link>
         }
@@ -45,7 +46,8 @@ const DoctorListPage = () => {
   return (
     <div>
       <BookingSteps current={3} />
-      <h1 className="font-serif text-2xl font-semibold text-ink">
+      <BookingContextBar items={[{ label: 'Hospital', value: hospitalName }]} />
+      <h1 className="font-display text-2xl font-semibold text-ink">
         Doctors at {hospitalName || 'this hospital'}
       </h1>
       <p className="mt-1 text-sm text-ink-muted">Pick a doctor to see availability and book a slot.</p>
@@ -75,7 +77,8 @@ const DoctorListPage = () => {
       </div>
 
       <div className="mt-6 space-y-3">
-        {isLoading && <Spinner label="Loading doctors…" />}
+        {isLoading &&
+          Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} lines={2} />)}
         {isError && <ErrorNotice message="Couldn't load doctors right now." />}
         {!isLoading && !isError && doctors?.length === 0 && (
           <EmptyState title="No doctors found" description="Try a different department or search term." />

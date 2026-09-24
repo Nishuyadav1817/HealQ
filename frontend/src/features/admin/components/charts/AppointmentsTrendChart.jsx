@@ -9,29 +9,29 @@ const AppointmentsTrendChart = ({ data = [], title = 'Appointments Over Time', s
   <ChartCard title={title} subtitle={subtitle}>
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EC" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#E3E7E2" vertical={false} />
         <XAxis
           dataKey="date"
           tickFormatter={formatDateTick}
-          tick={{ fontSize: 11, fill: '#98A2B3' }}
-          axisLine={{ stroke: '#E4E7EC' }}
+          tick={{ fontSize: 11, fill: '#94A299' }}
+          axisLine={{ stroke: '#E3E7E2' }}
           tickLine={false}
         />
         <YAxis
           allowDecimals={false}
-          tick={{ fontSize: 11, fill: '#98A2B3' }}
+          tick={{ fontSize: 11, fill: '#94A299' }}
           axisLine={false}
           tickLine={false}
         />
         <Tooltip
           labelFormatter={(value) => value}
-          contentStyle={{ fontSize: 12, borderRadius: 8, borderColor: '#E4E7EC' }}
+          contentStyle={{ fontSize: 12, borderRadius: 8, borderColor: '#E3E7E2' }}
         />
         <Line
           type="monotone"
           dataKey="count"
           name="Appointments"
-          stroke="#0F8C82"
+          stroke="#146F6C"
           strokeWidth={2}
           dot={false}
           activeDot={{ r: 4 }}

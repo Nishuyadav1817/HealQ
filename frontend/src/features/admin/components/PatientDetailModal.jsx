@@ -27,11 +27,11 @@ const PatientDetailModal = ({ isOpen, onClose, patientId }) => {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded border border-surface-border bg-surface p-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted p-3">
               <p className="text-xl font-semibold text-ink">{data.stats.totalAppointments}</p>
               <p className="text-xs text-ink-muted">Total appointments</p>
             </div>
-            <div className="rounded border border-surface-border bg-surface p-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted p-3">
               <p className="text-xl font-semibold text-ink">{data.stats.completedAppointments}</p>
               <p className="text-xs text-ink-muted">Completed</p>
             </div>

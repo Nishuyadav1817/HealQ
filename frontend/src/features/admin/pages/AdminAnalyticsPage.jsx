@@ -56,13 +56,13 @@ const AdminAnalyticsPage = () => {
               data={analytics.appointmentsByHospital.map((h) => ({ name: h.name, count: h.count }))}
               title="Top Hospitals by Volume"
               subtitle={`Last ${analytics.range.days} days`}
-              barColor="#33449E"
+              barColor="#3B6FE0"
             />
             <VolumeBarChart
               data={analytics.appointmentsByDepartment.map((d) => ({ name: d.name, count: d.count }))}
               title="Top Departments by Volume"
               subtitle={`Last ${analytics.range.days} days`}
-              barColor="#B5560F"
+              barColor="#C48D0F"
             />
           </div>
         </div>

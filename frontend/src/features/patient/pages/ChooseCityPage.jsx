@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Field from '../components/ui/PField';
-import { Spinner, EmptyState, ErrorNotice } from '../components/ui/PStateNotice';
+import { EmptyState, ErrorNotice, CardSkeleton } from '../components/ui/PStateNotice';
 import { useCities } from '../hooks/useLookups';
 import CityCard from '../components/CityCard';
 import BookingSteps from '../components/BookingSteps';
@@ -19,7 +19,7 @@ const ChooseCityPage = () => {
   return (
     <div>
       <BookingSteps current={1} />
-      <h1 className="font-serif text-2xl font-semibold text-ink">Choose your city</h1>
+      <h1 className="font-display text-2xl font-semibold text-ink">Choose your city</h1>
       <p className="mt-1 text-sm text-ink-muted">We'll show you hospitals available in that city.</p>
 
       <div className="mt-4 max-w-sm">
@@ -32,7 +32,13 @@ const ChooseCityPage = () => {
       </div>
 
       <div className="mt-6">
-        {isLoading && <Spinner label="Loading cities…" />}
+        {isLoading && (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <CardSkeleton key={i} lines={1} />
+            ))}
+          </div>
+        )}
         {isError && <ErrorNotice message="Couldn't load cities right now." />}
         {!isLoading && !isError && cities?.length === 0 && (
           <EmptyState title="No cities found" description="Try a different search term." />

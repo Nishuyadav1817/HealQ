@@ -13,6 +13,11 @@ import apiClient from '../../../services/apiClient';
 export const getHospitalDoctors = (hospitalId) =>
   apiClient.get('/doctors', { params: { hospital: hospitalId, limit: 100 } });
 
+// Same '/hospitals/:id' endpoint Reception's useHospital already resolves
+// its own account's hospital through — used here only to turn the
+// assistant's `user.hospital` id into a real hospital name for the header.
+export const getHospitalById = (id) => apiClient.get(`/hospitals/${id}`);
+
 export const getQueue = (params) => apiClient.get('/doctor-assistant/queue', { params });
 
 export const callNextPatient = (payload) => apiClient.post('/doctor-assistant/queue/call-next', payload);

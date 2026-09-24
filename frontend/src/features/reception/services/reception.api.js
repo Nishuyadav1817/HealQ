@@ -9,6 +9,14 @@ import apiClient from '../../../services/apiClient';
 export const getTodaysAppointments = (params = {}) =>
   apiClient.get('/reception/appointments/today', { params });
 
+// Same public/optionalAuth lookup endpoint the Patient panel uses to show
+// a hospital's name (see features/patient/services/patient.api.js) — used
+// here only to resolve the reception user's own hospital (`user.hospital`)
+// into a display name for the header/dashboard branding. No new backend
+// functionality, just a second thin wrapper around an endpoint that
+// already exists.
+export const getHospitalById = (id) => apiClient.get(`/hospitals/${id}`);
+
 export const searchByBookingNumber = (bookingNumber) =>
   apiClient.get('/reception/appointments/search', { params: { bookingNumber } });
 

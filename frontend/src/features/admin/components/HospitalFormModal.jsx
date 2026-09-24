@@ -86,13 +86,24 @@ const HospitalFormModal = ({ isOpen, onClose, hospital = null }) => {
     onClose();
   };
 
+  const modalTitle = isEditing ? (
+    <div className="flex items-center gap-3">
+      <div className="leading-tight">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-ink-subtle">Hospital</p>
+        <p className="text-sm font-bold text-ink">{hospital.name}</p>
+      </div>
+      <span className="h-6 w-px bg-surface-border" />
+      <div className="leading-tight">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-ink-subtle">Platform</p>
+        <p className="text-sm font-bold text-role-admin">UpcharGanga</p>
+      </div>
+    </div>
+  ) : (
+    'Create Hospital'
+  );
+
   return (
-    <Modal
-      title={isEditing ? 'Edit Hospital' : 'Create Hospital'}
-      isOpen={isOpen}
-      onClose={onClose}
-      size="lg"
-    >
+    <Modal title={modalTitle} isOpen={isOpen} onClose={onClose} size="lg">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Hospital name" value={form.name} onChange={setField('name')} required />

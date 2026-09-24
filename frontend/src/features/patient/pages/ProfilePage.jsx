@@ -1,6 +1,7 @@
 import { useAuth } from '../../../context/AuthContext';
 import Card from '../components/ui/PCard';
 import Button from '../components/ui/PButton';
+import PAvatar from '../components/ui/PAvatar';
 
 const formatDate = (value) =>
   value ? new Date(value).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
@@ -25,8 +26,16 @@ const ProfilePage = () => {
 
   return (
     <div className="max-w-lg">
-      <h1 className="font-serif text-2xl font-semibold text-ink">Profile</h1>
+      <h1 className="font-display text-2xl font-semibold text-ink">Profile</h1>
       <p className="mt-1 text-sm text-ink-muted">Your account details.</p>
+
+      <div className="mt-4 flex items-center gap-4 rounded-xl border border-primary-100 bg-primary-50/50 p-5">
+        <PAvatar name={user?.fullName} size="lg" />
+        <div>
+          <p className="font-display text-lg font-semibold text-ink">{user?.fullName}</p>
+          <p className="text-sm text-ink-muted">{user?.email}</p>
+        </div>
+      </div>
 
       <Card className="mt-4">
         <dl className="space-y-3 text-sm">

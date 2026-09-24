@@ -254,7 +254,7 @@ const DoctorFormModal = ({ isOpen, onClose, doctor = null }) => {
                       <td className="px-3 py-2">
                         <input
                           type="time"
-                          className="rounded border border-surface-border px-2 py-1 text-sm disabled:bg-surface disabled:text-ink-subtle"
+                          className="rounded-lg border border-surface-border px-2 py-1 text-sm transition-smooth focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-100 disabled:bg-surface-muted disabled:text-ink-subtle"
                           value={dayForm.startTime}
                           onChange={setDayField(value, 'startTime')}
                           disabled={!dayForm.enabled}
@@ -264,7 +264,7 @@ const DoctorFormModal = ({ isOpen, onClose, doctor = null }) => {
                       <td className="px-3 py-2">
                         <input
                           type="time"
-                          className="rounded border border-surface-border px-2 py-1 text-sm disabled:bg-surface disabled:text-ink-subtle"
+                          className="rounded-lg border border-surface-border px-2 py-1 text-sm transition-smooth focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-100 disabled:bg-surface-muted disabled:text-ink-subtle"
                           value={dayForm.endTime}
                           onChange={setDayField(value, 'endTime')}
                           disabled={!dayForm.enabled}

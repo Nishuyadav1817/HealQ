@@ -1,10 +1,5 @@
-import DashboardShell from '../components/common/DashboardShell';
-import { ROUTES } from '../constants/routePaths';
-
-const NAV_ITEMS = [
-  { label: 'Live Queue', path: ROUTES.DOCTOR.ROOT, end: true },
-  { label: 'Consultation History', path: `${ROUTES.DOCTOR.ROOT}/history` },
-];
+import { DoctorSelectionProvider } from '../features/doctorAssistant/context/DoctorSelectionContext';
+import DoctorTopNav from '../features/doctorAssistant/components/ui/DoctorTopNav';
 
 /**
  * Root layout for the Doctor Assistant panel (Panel 2 — backend role
@@ -12,9 +7,18 @@ const NAV_ITEMS = [
  * "Doctor" here to match the panel as requested; the role check and API
  * calls underneath still target the doctorAssistant account that
  * operates this panel on the doctor's behalf.
+ *
+ * Uses its own dedicated shell (DoctorTopNav) rather than the shared
+ * DashboardShell — the same "scope the redesign to one panel" approach
+ * already used for Reception (ReceptionTopNav); Admin keeps using
+ * DashboardShell untouched. DoctorSelectionProvider wraps the whole
+ * panel (not just the board page) so the header can show which doctor
+ * is currently selected, in sync with DoctorQueuePage underneath it.
  */
 const DoctorLayout = () => (
-  <DashboardShell roleLabel="Doctor Assistant" accent="doctor" navItems={NAV_ITEMS} />
+  <DoctorSelectionProvider>
+    <DoctorTopNav />
+  </DoctorSelectionProvider>
 );
 
 export default DoctorLayout;

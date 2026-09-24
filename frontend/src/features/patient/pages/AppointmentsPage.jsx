@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Field from '../components/ui/PField';
 import Button from '../components/ui/PButton';
-import { Spinner, EmptyState, ErrorNotice } from '../components/ui/PStateNotice';
+import { EmptyState, ErrorNotice, CardSkeleton } from '../components/ui/PStateNotice';
 import { useMyAppointments } from '../hooks/useAppointments';
 import AppointmentCard from '../components/AppointmentCard';
 import { ROUTES } from '../../../constants/routePaths';
@@ -25,7 +25,7 @@ const AppointmentsPage = () => {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-2xl font-semibold text-ink">My Appointments</h1>
+          <h1 className="font-display text-2xl font-semibold text-ink">My Appointments</h1>
           <p className="mt-1 text-sm text-ink-muted">Track status and queue position for every booking.</p>
         </div>
         <Link to={ROUTES.PATIENT.CHOOSE_CITY}>
@@ -44,7 +44,8 @@ const AppointmentsPage = () => {
       </div>
 
       <div className="mt-6 space-y-3">
-        {isLoading && <Spinner label="Loading appointments…" />}
+        {isLoading &&
+          Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} lines={3} />)}
         {isError && <ErrorNotice message="Couldn't load your appointments right now." />}
         {!isLoading && !isError && appointments?.length === 0 && (
           <EmptyState

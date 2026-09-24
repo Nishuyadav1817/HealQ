@@ -3,6 +3,8 @@ import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
 import Field from '../../../components/ui/Field';
+import TokenChip from './ui/TokenChip';
+import RAvatar from './ui/RAvatar';
 import {
   useVerifyPatient,
   useCollectPayment,
@@ -22,6 +24,9 @@ const formatTime = (slot) => (slot ? `${slot.start}–${slot.end}` : '—');
  * reception.service.js) so a disabled/hidden button here never leads to
  * a 400 from the API. Used identically on the Today's Patients board and
  * the Search Booking result — one component, two call sites, no drift.
+ *
+ * Visual redesign only — every mutation, gating condition, and form
+ * field below is unchanged from before.
  */
 const ReceptionAppointmentCard = ({ appointment }) => {
   const [openPanel, setOpenPanel] = useState(null); // null | 'verify' | 'payment' | 'no-show' | 'cancelled'
@@ -70,32 +75,49 @@ const ReceptionAppointmentCard = ({ appointment }) => {
   };
 
   return (
-    <Card>
+    <Card className={isTerminal ? 'opacity-80' : ''}>
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="font-semibold text-ink">
-            #{appointment.tokenNumber} · {appointment.patient?.fullName}
-          </p>
-          <p className="text-sm text-ink-muted">
-            Dr. {appointment.doctor?.user?.fullName} · {appointment.department?.name}
-          </p>
-          <p className="mt-1 text-xs text-ink-subtle">
-            {formatTime(appointment.timeSlot)} · {appointment.bookingNumber}
-          </p>
-          {appointment.patient?.phone && (
-            <p className="text-xs text-ink-subtle">{appointment.patient.phone}</p>
-          )}
+        <div className="flex min-w-0 items-start gap-3">
+          <TokenChip
+            value={appointment.tokenNumber}
+            tone={appointment.status === 'in-consultation' ? 'active' : isTerminal ? 'muted' : 'default'}
+          />
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <RAvatar name={appointment.patient?.fullName} size="sm" />
+              <p className="truncate font-semibold text-ink">{appointment.patient?.fullName}</p>
+            </div>
+            <p className="mt-1 text-sm text-ink-muted">
+              Dr. {appointment.doctor?.user?.fullName} · {appointment.department?.name}
+            </p>
+            <p className="mt-0.5 text-xs text-ink-subtle">
+              {formatTime(appointment.timeSlot)} · {appointment.bookingNumber}
+            </p>
+            {appointment.patient?.phone && (
+              <p className="text-xs text-ink-subtle">{appointment.patient.phone}</p>
+            )}
+          </div>
         </div>
         <div className="flex flex-col items-end gap-1.5">
           <Badge status={appointment.status} />
-          <span className={`text-xs font-medium ${appointment.verifiedAt ? 'text-success' : 'text-ink-subtle'}`}>
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+              appointment.verifiedAt ? 'bg-success/10 text-success' : 'bg-surface-muted text-ink-subtle'
+            }`}
+          >
             {appointment.verifiedAt ? '✓ Verified' : 'Not verified'}
           </span>
-          <span className={`text-xs font-medium ${appointment.payment ? 'text-success' : 'text-ink-subtle'}`}>
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+              appointment.payment ? 'bg-success/10 text-success' : 'bg-gold-100 text-gold-700'
+            }`}
+          >
             {appointment.payment ? `✓ Paid ₹${appointment.payment.amount}` : 'Payment pending'}
           </span>
           {appointment.isInDoctorQueue && (
-            <span className="text-xs font-medium text-role-doctor">In doctor queue</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-role-doctor/10 px-2 py-0.5 text-xs font-medium text-role-doctor">
+              In doctor queue
+            </span>
           )}
         </div>
       </div>
@@ -141,7 +163,7 @@ const ReceptionAppointmentCard = ({ appointment }) => {
       )}
 
       {openPanel === 'verify' && (
-        <div className="mt-3 space-y-3 rounded border border-surface-border bg-surface p-3">
+        <div className="mt-3 space-y-3 rounded-lg border border-surface-border bg-surface p-3">
           <Field
             label="Verification notes (optional)"
             as="textarea"
@@ -166,7 +188,7 @@ const ReceptionAppointmentCard = ({ appointment }) => {
       )}
 
       {openPanel === 'payment' && (
-        <div className="mt-3 space-y-3 rounded border border-surface-border bg-surface p-3">
+        <div className="mt-3 space-y-3 rounded-lg border border-surface-border bg-surface p-3">
           <div className="grid grid-cols-2 gap-3">
             <Field
               label="Payment method"
@@ -206,7 +228,7 @@ const ReceptionAppointmentCard = ({ appointment }) => {
       )}
 
       {(openPanel === 'no-show' || openPanel === 'cancelled') && (
-        <div className="mt-3 space-y-3 rounded border border-danger/30 bg-danger/5 p-3">
+        <div className="mt-3 space-y-3 rounded-lg border border-danger/30 bg-danger/5 p-3">
           <p className="text-sm font-medium text-ink">
             {openPanel === 'no-show' ? 'Mark this patient as a no-show?' : 'Cancel this appointment?'}
           </p>

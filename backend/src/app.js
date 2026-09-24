@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const sanitize = require('./middlewares/sanitize.middleware');
 const compression = require('compression');
 const morgan = require('morgan');
-const rateLimit = require("express-rate-limit");
+
 const config = require('./config/env');
 const routes = require('./routes');
 const errorHandler = require('./middlewares/error.middleware');
@@ -50,19 +50,6 @@ app.use(compression());
 if (config.env !== 'test') {
   app.use(morgan(config.env === 'development' ? 'dev' : 'combined'));
 }
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "API is running 🚀"
-  });
-});
-app.set("trust proxy", 1);
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-});
-
-app.use(limiter);
 
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok', env: config.env }));
 

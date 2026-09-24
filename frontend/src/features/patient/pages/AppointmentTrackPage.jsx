@@ -3,6 +3,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Badge from '../components/ui/PBadge';
 import Button from '../components/ui/PButton';
 import Card from '../components/ui/PCard';
+import PLiveIndicator from '../components/ui/PLiveIndicator';
+import StatTile from '../components/StatTile';
+import StatusTimeline from '../components/StatusTimeline';
 import { Spinner, ErrorNotice } from '../components/ui/PStateNotice';
 import { useAppointment, useCancelAppointment } from '../hooks/useAppointments';
 import useAppointmentTracking from '../hooks/useAppointmentTracking';
@@ -13,11 +16,19 @@ const CANCELLABLE_STATUSES = ['pending', 'confirmed'];
 const formatDate = (value) =>
   new Date(value).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
 
+/**
+ * The patient's live queue screen — same underlying Socket.IO mechanism
+ * as before (useAppointmentTracking), presented as an obvious real-time
+ * queue board: your token, the token currently being served, how many
+ * people are ahead of you, and your estimated wait, alongside the
+ * doctor/hospital/status context so a patient never has to guess which
+ * appointment this is.
+ */
 const AppointmentTrackPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: appointment, isLoading, isError } = useAppointment(id);
-  const live = useAppointmentTracking(id);
+  const { live, isConnected } = useAppointmentTracking(id);
   const cancelMutation = useCancelAppointment();
   const [cancelReason, setCancelReason] = useState('');
   const [showCancelForm, setShowCancelForm] = useState(false);
@@ -28,7 +39,7 @@ const AppointmentTrackPage = () => {
       <ErrorNotice
         message="Couldn't load this appointment."
         action={
-          <Link to={ROUTES.PATIENT.APPOINTMENTS} className="text-sm font-medium text-healq-600">
+          <Link to={ROUTES.PATIENT.APPOINTMENTS} className="text-sm font-medium text-primary-600">
             Back to My Appointments →
           </Link>
         }
@@ -37,6 +48,13 @@ const AppointmentTrackPage = () => {
   }
 
   const canCancel = CANCELLABLE_STATUSES.includes(appointment.status);
+  const status = live?.called ? 'in-consultation' : appointment.status;
+  const peopleAhead = live?.queuePosition != null ? Math.max(live.queuePosition - 1, 0) : null;
+  const nowServing =
+    peopleAhead != null && appointment.tokenNumber != null
+      ? Math.max(appointment.tokenNumber - peopleAhead, 1)
+      : null;
+  const isActiveQueue = ['pending', 'confirmed', 'checked-in', 'in-consultation'].includes(appointment.status);
 
   const handleCancel = async () => {
     await cancelMutation.mutateAsync({ id, reason: cancelReason });
@@ -44,42 +62,55 @@ const AppointmentTrackPage = () => {
   };
 
   return (
-    <div className="max-w-xl">
-      <Link to={ROUTES.PATIENT.APPOINTMENTS} className="text-sm font-medium text-ink-muted hover:text-healq-700">
+    <div className="max-w-2xl">
+      <Link to={ROUTES.PATIENT.APPOINTMENTS} className="text-sm font-medium text-ink-muted hover:text-primary-700">
         ← Back to My Appointments
       </Link>
 
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <h1 className="font-serif text-2xl font-semibold text-ink">
-          Dr. {appointment.doctor?.user?.fullName}
-        </h1>
-        <Badge status={live?.called ? 'in-consultation' : appointment.status} />
-      </div>
-      <p className="text-sm text-ink-muted">{appointment.hospital?.name}</p>
-      {appointment.hospital?.address?.line1 && (
-        <p className="text-xs text-ink-subtle">{appointment.hospital.address.line1}</p>
-      )}
-
-      {/* Signature element: same large token-number badge used on the
-          booking-success screen and the landing-page hero preview. */}
-      <div className="mt-4 flex flex-wrap items-center gap-4 rounded-2xl border border-healq-100 bg-healq-50/60 px-6 py-4">
+      {/* Who/where context — always visible so the patient knows exactly
+          which hospital + doctor this queue view belongs to. */}
+      <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Your token</p>
-          <p className="font-serif text-4xl font-semibold text-healq-700">#{appointment.tokenNumber}</p>
+          <h1 className="font-display text-2xl font-semibold text-ink">
+            Dr. {appointment.doctor?.user?.fullName}
+          </h1>
+          <p className="text-sm text-ink-muted">
+            {appointment.hospital?.name}
+            {appointment.department?.name ? ` · ${appointment.department.name}` : ''}
+          </p>
+          {appointment.hospital?.address?.line1 && (
+            <p className="text-xs text-ink-subtle">{appointment.hospital.address.line1}</p>
+          )}
         </div>
-        {live?.queuePosition != null && (
-          <div className="border-l border-healq-200 pl-4">
-            <p className="text-xs text-ink-subtle">Patients ahead</p>
-            <p className="text-lg font-semibold text-ink">{Math.max(live.queuePosition - 1, 0)}</p>
-          </div>
-        )}
-        {live?.estimatedWaitingMinutes != null && (
-          <div className="border-l border-healq-200 pl-4">
-            <p className="text-xs text-ink-subtle">Estimated wait</p>
-            <p className="text-lg font-semibold text-ink">~{live.estimatedWaitingMinutes} min</p>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {isActiveQueue && <PLiveIndicator isConnected={isConnected} />}
+          <Badge status={status} />
+        </div>
       </div>
+
+      <div className="mt-4">
+        <StatusTimeline status={status} />
+      </div>
+
+      {/* Queue board */}
+      <div className="mt-5 rounded-2xl border border-primary-100 bg-primary-50/50 px-5 py-5 sm:px-6">
+        <div className="grid grid-cols-2 gap-y-5 sm:grid-cols-4">
+          <StatTile label="Your token" value={`#${appointment.tokenNumber}`} emphasize />
+          <StatTile label="Now serving" value={nowServing != null ? `#${nowServing}` : '—'} tone="gold" />
+          <StatTile label="Patients ahead" value={peopleAhead != null ? peopleAhead : '—'} />
+          <StatTile
+            label="Est. wait"
+            value={live?.estimatedWaitingMinutes != null ? `${live.estimatedWaitingMinutes} min` : '—'}
+          />
+        </div>
+      </div>
+
+      {live?.called && (
+        <div className="mt-4 flex items-center gap-2 rounded-xl border border-gold-300 bg-gold-50 p-4 text-sm font-medium text-gold-700">
+          <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-gold-500" />
+          You're being called — please proceed to the consultation room now.
+        </div>
+      )}
 
       <Card className="mt-4">
         <dl className="space-y-3 text-sm">
@@ -100,12 +131,6 @@ const AppointmentTrackPage = () => {
         </dl>
       </Card>
 
-      {live?.called && (
-        <div className="mt-4 rounded-xl border border-healq-600/30 bg-healq-50 p-4 text-sm font-medium text-healq-700">
-          You're being called — please proceed to the consultation room now.
-        </div>
-      )}
-
       {appointment.status === 'cancelled' && appointment.cancellationReason && (
         <p className="mt-4 text-sm text-ink-muted">Cancellation reason: {appointment.cancellationReason}</p>
       )}
@@ -117,10 +142,10 @@ const AppointmentTrackPage = () => {
               Cancel appointment
             </Button>
           ) : (
-            <div className="space-y-3 rounded-xl border border-healq-100 p-4">
+            <div className="space-y-3 rounded-xl border border-primary-100 p-4">
               <p className="text-sm font-medium text-ink">Are you sure you want to cancel?</p>
               <textarea
-                className="w-full rounded-lg border border-healq-200 p-2 text-sm focus:border-healq-600 focus:outline-none focus:ring-2 focus:ring-healq-100"
+                className="w-full rounded-lg border border-primary-200 p-2 text-sm focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-100"
                 placeholder="Reason (optional)"
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
