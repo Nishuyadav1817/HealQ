@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * Small pill used to render an appointment/queue status. Colors are
  * looked up by the raw backend status string (see constants/enums on the

@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * The header's "notifications" slot. There is no notifications backend
  * for the Doctor Assistant panel (unlike the Patient panel's

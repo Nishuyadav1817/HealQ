@@ -1,3 +1,4 @@
+import React from "react";
 import { Spinner, EmptyState, ErrorNotice } from './StateNotice';
 
 /**

@@ -1,3 +1,4 @@
+import React from "react";
 import { AlertIcon, CheckCircleIcon } from './icons';
 
 const VARIANTS = {

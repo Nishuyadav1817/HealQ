@@ -1,3 +1,4 @@
+import React from "react";
 import { Spinner, ErrorNotice, EmptyState } from '../../../components/ui/StateNotice';
 import { useDoctorSelection } from '../context/DoctorSelectionContext';
 import { useQueue } from '../hooks/useQueue';

@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Shared "nothing to show yet" layout — neutral (empty list), negative
  * (a request failed), positive (an action succeeded), and in-progress
@@ -120,3 +122,12 @@ export const CardSkeleton = ({ lines = 3, className = '' }) => (
 );
 
 export { StateIcon };
+
+export default {
+  EmptyState,
+  ErrorNotice,
+  SuccessNotice,
+  Spinner,
+  CardSkeleton,
+  StateIcon,
+};

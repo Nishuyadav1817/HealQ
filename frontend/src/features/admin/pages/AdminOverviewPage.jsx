@@ -1,3 +1,4 @@
+import React from "react";
 import { Spinner, ErrorNotice } from '../../../components/ui/StateNotice';
 import StatCard from '../../../components/ui/StatCard';
 import { useDashboardSummary } from '../hooks/useDashboardSummary';

@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * Today's headline queue numbers. Every figure here is derived purely
  * from the same `queueView` payload useQueue already fetches on

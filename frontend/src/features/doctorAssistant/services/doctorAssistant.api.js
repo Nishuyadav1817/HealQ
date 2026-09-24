@@ -1,39 +1,82 @@
 import apiClient from '../../../services/apiClient';
 
 /**
- * Thin request wrappers only — no caching/state, same split used by
- * features/reception/services/reception.api.js. React Query hooks in
- * ../hooks own caching/loading/error state on top of these.
- *
- * Mounted at '/doctor-assistant' on the backend (see routes/index.js) —
- * note the hyphen, it does NOT match the module folder name
- * `doctorAssistant`.
+ * Doctor Assistant API Endpoints
+ * Handles all backend calls for queue management and doctor/hospital lookups
  */
 
-export const getHospitalDoctors = (hospitalId) =>
-  apiClient.get('/doctors', { params: { hospital: hospitalId, limit: 100 } });
+// Hospital & Doctor Lookups
+export const getHospitalById = (hospitalId) => {
+  return apiClient.get(`/hospitals/${hospitalId}`);
+};
 
-// Same '/hospitals/:id' endpoint Reception's useHospital already resolves
-// its own account's hospital through — used here only to turn the
-// assistant's `user.hospital` id into a real hospital name for the header.
-export const getHospitalById = (id) => apiClient.get(`/hospitals/${id}`);
+export const getHospitalDoctors = (hospitalId) => {
+  return apiClient.get(`/hospitals/${hospitalId}/doctors`);
+};
 
-export const getQueue = (params) => apiClient.get('/doctor-assistant/queue', { params });
+// Queue Operations
+export const getQueue = ({ doctor, date }) => {
+  const params = new URLSearchParams();
+  if (doctor) params.append('doctor', doctor);
+  if (date) params.append('date', date);
 
-export const callNextPatient = (payload) => apiClient.post('/doctor-assistant/queue/call-next', payload);
+  return apiClient.get(`/doctor-assistant/queue?${params.toString()}`);
+};
 
-export const startConsultation = (appointmentId) =>
-  apiClient.patch(`/doctor-assistant/queue/${appointmentId}/start`);
+export const callNextPatient = ({ doctorId, date }) => {
+  return apiClient.post('/doctor-assistant/queue/call-next', {
+    doctorId,
+    date,
+  });
+};
 
-export const completeConsultation = (appointmentId) =>
-  apiClient.patch(`/doctor-assistant/queue/${appointmentId}/complete`);
+export const startConsultation = ({ appointmentId }) => {
+  return apiClient.post(`/doctor-assistant/appointments/${appointmentId}/start`, {});
+};
 
-export const skipPatient = (appointmentId) =>
-  apiClient.patch(`/doctor-assistant/queue/${appointmentId}/skip`);
+export const completeConsultation = ({ appointmentId, notes }) => {
+  return apiClient.post(`/doctor-assistant/appointments/${appointmentId}/complete`, {
+    notes,
+  });
+};
 
-export const pauseQueue = (payload) => apiClient.patch('/doctor-assistant/queue/pause', payload);
+export const skipPatient = ({ appointmentId, reason }) => {
+  return apiClient.post(`/doctor-assistant/appointments/${appointmentId}/skip`, {
+    reason,
+  });
+};
 
-export const resumeQueue = (payload) => apiClient.patch('/doctor-assistant/queue/resume', payload);
+export const pauseQueue = ({ doctorId, date }) => {
+  return apiClient.post('/doctor-assistant/queue/pause', {
+    doctorId,
+    date,
+  });
+};
 
-export const setAverageConsultationMinutes = (payload) =>
-  apiClient.patch('/doctor-assistant/queue/average-consultation-time', payload);
+export const resumeQueue = ({ doctorId, date }) => {
+  return apiClient.post('/doctor-assistant/queue/resume', {
+    doctorId,
+    date,
+  });
+};
+
+export const setAverageConsultationMinutes = ({ doctorId, date, minutes }) => {
+  return apiClient.post('/doctor-assistant/queue/consultation-time', {
+    doctorId,
+    date,
+    minutes,
+  });
+};
+
+export default {
+  getHospitalById,
+  getHospitalDoctors,
+  getQueue,
+  callNextPatient,
+  startConsultation,
+  completeConsultation,
+  skipPatient,
+  pauseQueue,
+  resumeQueue,
+  setAverageConsultationMinutes,
+};

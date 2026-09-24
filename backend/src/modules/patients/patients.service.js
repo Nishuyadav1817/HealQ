@@ -8,13 +8,12 @@ const ApiError = require('../../errors/ApiError');
 const ApiFeatures = require('../../utils/apiFeatures.util');
 const withTransaction = require('../../utils/withTransaction.util');
 const { normalizeDateOnly, getWeekdayName, getHospitalNow } = require('../../utils/datetime.util');
+const businessConfig = require('../../config/business');
 const {
   APPOINTMENT_STATUS,
   CONSULTATION_TYPE,
   QUEUE_ENTRY_STATUS,
 } = require('../../constants/enums');
-
-const MAX_BOOKING_ADVANCE_DAYS = 90;
 
 const APPOINTMENT_POPULATE = [
   { path: 'doctor', select: 'specialization consultationFee user', populate: { path: 'user', select: 'fullName' } },
@@ -67,10 +66,25 @@ const bookAppointment = async (patientId, payload) => {
     throw new ApiError(400, 'Cannot book an appointment for a past date.');
   }
 
+  // Apply booking window restrictions from business config
+  const minAdvanceDate = new Date(today);
+  minAdvanceDate.setUTCDate(minAdvanceDate.getUTCDate() + businessConfig.BOOKING.MIN_ADVANCE_DAYS);
+
   const maxAdvanceDate = new Date(today);
-  maxAdvanceDate.setUTCDate(maxAdvanceDate.getUTCDate() + MAX_BOOKING_ADVANCE_DAYS);
+  maxAdvanceDate.setUTCDate(maxAdvanceDate.getUTCDate() + businessConfig.BOOKING.MAX_ADVANCE_DAYS);
+
+  if (normalizedDate < minAdvanceDate) {
+    throw new ApiError(
+      400,
+      `Appointments must be booked at least ${businessConfig.BOOKING.MIN_ADVANCE_DAYS} day(s) in advance.`
+    );
+  }
+
   if (normalizedDate > maxAdvanceDate) {
-    throw new ApiError(400, `Appointments can only be booked up to ${MAX_BOOKING_ADVANCE_DAYS} days in advance.`);
+    throw new ApiError(
+      400,
+      `Appointments can only be booked up to ${businessConfig.BOOKING.MAX_ADVANCE_DAYS} days in advance.`
+    );
   }
 
   const weekday = getWeekdayName(normalizedDate);

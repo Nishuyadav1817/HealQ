@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * One shared set of stroke icons for the Admin panel — sidebar nav,
  * header, and KPI cards all pull from here so the icon language stays

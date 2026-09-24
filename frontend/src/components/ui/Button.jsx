@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * Single reusable button used across every operational-panel screen.
  * Variant controls color/weight, `isLoading` swaps the label for an

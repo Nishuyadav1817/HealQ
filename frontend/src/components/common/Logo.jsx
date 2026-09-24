@@ -1,3 +1,4 @@
+import React from "react";
 import symbolAsset from '../../assets/brand/upcharganga-symbol.png';
 import fullLogoAsset from '../../assets/brand/upcharganga-logo-full.png';
 

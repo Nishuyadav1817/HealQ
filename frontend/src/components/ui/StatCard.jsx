@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * One number-forward metric tile — hospitals count, revenue, appointments
  * today, etc. Reused across every Admin dashboard tab that needs a quick

@@ -1,3 +1,4 @@
+import React from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { setAccessToken, clearAccessToken } from '../services/tokenStore';
 import { connectSocket, disconnectSocket } from '../sockets/socketClient';
@@ -12,6 +13,7 @@ const AuthContext = createContext(undefined);
  * in tokenStore.js (see that file for why), so a token refresh never
  * needs to trigger a re-render of everything that reads useAuth().
  */
+export { AuthContext };
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // true until bootstrap finishes

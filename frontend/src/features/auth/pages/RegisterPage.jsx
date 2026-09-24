@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
@@ -6,10 +7,9 @@ import PasswordField from '../components/PasswordField';
 import PasswordStrength from '../components/PasswordStrength';
 import AuthAlert from '../components/AuthAlert';
 import { MailIcon, UserIcon, PhoneIcon, CalendarIcon, CheckCircleIcon } from '../components/icons';
-import Button from '../../patient/components/ui/PButton';
+import Button from '../../../components/ui/Button';
 import { registerRequest } from '../services/auth.api';
 import { ROUTES } from '../../../constants/routePaths';
-import { getApiErrorMessage } from '../../../utils/apiError';
 
 const INITIAL_FORM = {
   fullName: '',
@@ -78,7 +78,7 @@ const RegisterPage = () => {
         navigate(ROUTES.LOGIN, { replace: true, state: { justRegistered: true } });
       }, 1100);
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Registration failed. Please check your details.'));
+      setError(err?.response?.data?.message || 'Registration failed. Please check your details.');
       setIsSubmitting(false);
     }
   };

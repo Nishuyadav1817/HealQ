@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * Plain surface container reused for every card-like block across the
  * operational panels. `onClick` makes it behave like a selectable

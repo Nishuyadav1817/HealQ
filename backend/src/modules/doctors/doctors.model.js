@@ -91,6 +91,30 @@ const doctorSchema = new Schema(
       default: true,
     },
 
+    // Unavailability dates — specific dates when the doctor is not available
+    // to consult (leave, special duty, etc.). Prevents booking on these dates
+    // and triggers auto-cancellation of existing appointments.
+    unavailability: [
+      {
+        date: {
+          type: Date,
+          required: true,
+        },
+        reason: {
+          type: String,
+          trim: true,
+          maxlength: 200,
+          default: 'Doctor unavailable',
+        },
+        createdBy: {
+          type: Schema.Types.ObjectId,
+          ref: 'User', // admin or doctor assistant who marked unavailable
+          required: true,
+        },
+        _id: false,
+      },
+    ],
+
     averageRating: {
       type: Number,
       default: 0,
@@ -116,5 +140,8 @@ doctorSchema.index({ hospital: 1, department: 1, isActive: 1 });
 
 // Powers "search doctors by specialization" (e.g. patient searching "skin").
 doctorSchema.index({ specialization: 'text' });
+
+// For checking unavailability on a specific date
+doctorSchema.index({ 'unavailability.date': 1 });
 
 module.exports = mongoose.model('Doctor', doctorSchema);

@@ -13,6 +13,7 @@ const {
   updateDoctorSchema,
   assignHospitalSchema,
   assignDepartmentSchema,
+  markUnavailableSchema,
 } = require('./doctors.validation');
 
 // Public browse — patients need to see doctors to book appointments.
@@ -41,6 +42,26 @@ router.patch(
   validate(assignDepartmentSchema),
   doctorController.assignDepartment
 );
+
+// Doctor unavailability management
+router.post(
+  '/:id/unavailability',
+  validateObjectId('id'),
+  validate(markUnavailableSchema),
+  doctorController.markUnavailable
+);
+router.delete(
+  '/:id/unavailability/:date',
+  validateObjectId('id'),
+  doctorController.removeUnavailability
+);
+router.get(
+  '/:id/unavailability',
+  validateObjectId('id'),
+  doctorController.getUnavailability
+);
+
 router.delete('/:id', validateObjectId('id'), doctorController.deleteDoctor);
 
 module.exports = router;
+

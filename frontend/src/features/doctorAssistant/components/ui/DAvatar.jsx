@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * Doctor Assistant panel's initials avatar — same idea as Reception's
  * RAvatar and the Patient panel's PAvatar (no photo upload exists on the

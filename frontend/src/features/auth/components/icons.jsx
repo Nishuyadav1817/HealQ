@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * A small local icon set for the auth screens. The app has no icon
  * library dependency (see package.json), so these follow the same

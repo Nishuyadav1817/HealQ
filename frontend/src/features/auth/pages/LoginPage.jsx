@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
@@ -5,11 +6,10 @@ import AuthField from '../components/AuthField';
 import PasswordField from '../components/PasswordField';
 import AuthAlert from '../components/AuthAlert';
 import { MailIcon } from '../components/icons';
-import Button from '../../patient/components/ui/PButton';
+import Button from '../../../components/ui/Button';
 import { useAuth } from '../../../context/AuthContext';
 import { ROUTES } from '../../../constants/routePaths';
 import { USER_ROLES } from '../../../constants/roles';
-import { getApiErrorMessage } from '../../../utils/apiError';
 
 const ROLE_HOME = {
   [USER_ROLES.PATIENT]: ROUTES.PATIENT.ROOT,
@@ -57,7 +57,7 @@ const LoginPage = () => {
       const from = location.state?.from;
       navigate(from || ROLE_HOME[user.role] || ROUTES.HOME, { replace: true });
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Invalid email or password. Please try again.'));
+      setError(err?.response?.data?.message || 'Invalid email or password. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

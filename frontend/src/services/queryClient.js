@@ -1,26 +1,29 @@
 import { QueryClient } from '@tanstack/react-query';
 
 /**
- * Single QueryClient instance for the whole app, imported wherever a
- * non-component module needs to interact with the cache directly (e.g. an
- * imperative cache update from a socket event handler — see sockets/
- * usage once pages are built).
+ * React Query Client Configuration
  *
- * Defaults are tuned for an operations dashboard rather than a marketing
- * site: refetchOnWindowFocus is OFF because the live queue state is kept
- * fresh by Socket.IO, not by re-fetching every time a staff member
- * alt-tabs back to the browser — polling and sockets fighting over the
- * same data is a common source of UI flicker.
+ * Centralized setup for all data fetching and caching
+ * - Stale time: 5 minutes (data considered fresh for 5 min)
+ * - Cache time: 10 minutes (keep in memory for 10 min after last use)
+ * - Retries: 2 attempts on failure
+ * - Retry delay: Exponential backoff
  */
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
-      staleTime: 30_000,
-      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
+      retry: 2,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      refetchOnWindowFocus: false, // Disable auto-refetch on tab focus to reduce noise
     },
     mutations: {
-      retry: 0, // never silently re-submit a booking/payment/status change
+      retry: 1,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     },
   },
 });
+
+export default queryClient;

@@ -1,3 +1,4 @@
+import React from "react";
 import Modal from '../../../components/ui/Modal';
 import Badge from '../../../components/ui/Badge';
 import { Spinner, ErrorNotice } from '../../../components/ui/StateNotice';

@@ -1,32 +1,46 @@
 /**
- * Turns an array of flat objects into a CSV file and triggers a browser
- * download — no backend endpoint needed since every "report" here is
- * just a client-side reshaping of data the Admin dashboard already
- * fetched for its tables/charts. Shared by every exportable table on
- * the Reports tab.
+ * CSV Export Utilities
+ * Handle downloading data as CSV files
  */
-const toCsvValue = (value) => {
-  if (value === null || value === undefined) return '';
-  const str = String(value);
-  // Quote any field containing a comma, quote, or newline; escape
-  // embedded quotes by doubling them, per standard CSV rules.
-  return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-};
 
-export const downloadCsv = (filename, columns, rows) => {
-  const header = columns.map((col) => toCsvValue(col.header)).join(',');
-  const body = rows
-    .map((row) => columns.map((col) => toCsvValue(col.value(row))).join(','))
-    .join('\n');
-  const csv = `${header}\n${body}`;
+export const downloadCsv = (data, filename = 'export.csv') => {
+  if (!data || data.length === 0) {
+    console.warn('No data to export');
+    return;
+  }
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
+  // Get headers from first object
+  const headers = Object.keys(data[0]);
+
+  // Create CSV content
+  const csvContent = [
+    headers.join(','),
+    ...data.map(row =>
+      headers.map(header => {
+        const value = row[header];
+        // Escape quotes and wrap in quotes if contains comma or quotes
+        if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      }).join(',')
+    ),
+  ].join('\n');
+
+  // Create blob and download
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
+  const url = URL.createObjectURL(blob);
+
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+};
+
+export default {
+  downloadCsv,
 };

@@ -226,6 +226,74 @@ const softDeleteDoctor = async (id) => {
   });
 };
 
+/**
+ * Marks a doctor as unavailable on a specific date.
+ * Used for leave, special duties, etc.
+ */
+const markUnavailable = async (doctorId, date, reason, userId) => {
+  const doctor = await Doctor.findById(doctorId);
+  if (!doctor) throw new ApiError(404, 'Doctor not found.');
+
+  // Normalize date to midnight UTC (date-only, no time component)
+  const normalizedDate = new Date(date);
+  normalizedDate.setUTCHours(0, 0, 0, 0);
+
+  // Check if already marked unavailable on this date
+  const exists = doctor.unavailability.some(
+    (u) => u.date.getTime() === normalizedDate.getTime()
+  );
+  if (exists) {
+    throw new ApiError(400, 'Doctor is already marked unavailable on this date.');
+  }
+
+  doctor.unavailability.push({
+    date: normalizedDate,
+    reason: reason || 'Doctor unavailable',
+    createdBy: userId,
+  });
+
+  await doctor.save();
+  return doctor.populate([
+    { path: 'unavailability.createdBy', select: 'fullName' },
+  ]);
+};
+
+/**
+ * Removes unavailability for a specific date.
+ */
+const removeUnavailability = async (doctorId, dateString) => {
+  const doctor = await Doctor.findById(doctorId);
+  if (!doctor) throw new ApiError(404, 'Doctor not found.');
+
+  const targetDate = new Date(dateString);
+  targetDate.setUTCHours(0, 0, 0, 0);
+
+  const initialLength = doctor.unavailability.length;
+  doctor.unavailability = doctor.unavailability.filter(
+    (u) => u.date.getTime() !== targetDate.getTime()
+  );
+
+  if (doctor.unavailability.length === initialLength) {
+    throw new ApiError(400, 'No unavailability record found for this date.');
+  }
+
+  await doctor.save();
+  return doctor;
+};
+
+/**
+ * Gets all unavailability dates for a doctor.
+ */
+const getUnavailability = async (doctorId) => {
+  const doctor = await Doctor.findById(doctorId).populate(
+    'unavailability.createdBy',
+    'fullName'
+  );
+  if (!doctor) throw new ApiError(404, 'Doctor not found.');
+
+  return doctor.unavailability || [];
+};
+
 module.exports = {
   createDoctor,
   getDoctors,
@@ -234,4 +302,7 @@ module.exports = {
   assignHospital,
   assignDepartment,
   softDeleteDoctor,
+  markUnavailable,
+  removeUnavailability,
+  getUnavailability,
 };

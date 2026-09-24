@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * Decorative brand-panel illustration, purely visual (aria-hidden).
  * Composition, in one continuous idea: a few overlapping record cards

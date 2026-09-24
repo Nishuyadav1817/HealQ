@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * TEMPORARY scaffold marker — not a real page. Lets every route in the
  * architecture render to something and be navigated to/verified visually

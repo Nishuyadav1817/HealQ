@@ -1,3 +1,4 @@
+import React from "react";
 const RANGE_OPTIONS = [
   { label: '7 days', value: 7 },
   { label: '14 days', value: 14 },
