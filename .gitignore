@@ -5,3 +5,7 @@ uploads/*
 !uploads/.gitkeep
 coverage/
 .DS_Store
+frontend/dist/
+frontend/build/
+frontend/dist-new/
+*.local
