@@ -1,4 +1,3 @@
-import React from "react";
 import Button from './Button';
 
 /**
@@ -15,10 +14,9 @@ const Pagination = ({ page, limit, total, onPageChange }) => {
   const to = Math.min(page * limit, total);
 
   return (
-    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card px-4 py-3 shadow-soft-sm">
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
       <p className="text-xs text-ink-subtle">
-        Showing <span className="font-semibold text-ink-muted">{from}–{to}</span> of{' '}
-        <span className="font-semibold text-ink-muted">{total}</span>
+        Showing {from}–{to} of {total}
       </p>
       <div className="flex items-center gap-2">
         <Button
@@ -29,7 +27,7 @@ const Pagination = ({ page, limit, total, onPageChange }) => {
         >
           Previous
         </Button>
-        <span className="rounded-full bg-surface-muted px-2.5 py-1 text-xs font-semibold text-ink-muted">
+        <span className="text-xs font-medium text-ink-muted">
           Page {page} of {totalPages}
         </span>
         <Button

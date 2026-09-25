@@ -1,4 +1,3 @@
-import React from "react";
 import { useMemo, useState } from 'react';
 import Field from '../../../components/ui/Field';
 import Button from '../../../components/ui/Button';
@@ -66,18 +65,7 @@ const AdminHospitalsPage = () => {
           emptyTitle="No hospitals found"
           emptyDescription="Try a different search, or create the first one."
           columns={[
-            {
-              key: 'name',
-              header: 'Hospital',
-              render: (h) => (
-                <div>
-                  <p className="font-semibold text-ink">{h.name}</p>
-                  <p className="text-[11px] font-medium uppercase tracking-wide text-ink-subtle">
-                    UpcharGanga Platform
-                  </p>
-                </div>
-              ),
-            },
+            { key: 'name', header: 'Name', render: (h) => h.name },
             { key: 'city', header: 'City', render: (h) => h.city?.name || '—' },
             { key: 'type', header: 'Type', render: (h) => h.type },
             { key: 'phone', header: 'Phone', render: (h) => h.contact?.phone || '—' },

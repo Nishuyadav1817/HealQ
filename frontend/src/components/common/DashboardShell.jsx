@@ -1,8 +1,6 @@
-import React from "react";
 import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { LogoMark } from './Logo';
 
 /**
  * Literal Tailwind class strings per role — NOT built dynamically (e.g.
@@ -12,10 +10,10 @@ import { LogoMark } from './Logo';
  * production build.
  */
 const ACCENTS = {
-  patient: { active: 'bg-role-patient/10 text-role-patient', bar: 'bg-role-patient', dot: 'bg-role-patient' },
-  reception: { active: 'bg-role-reception/10 text-role-reception', bar: 'bg-role-reception', dot: 'bg-role-reception' },
-  doctor: { active: 'bg-role-doctor/10 text-role-doctor', bar: 'bg-role-doctor', dot: 'bg-role-doctor' },
-  admin: { active: 'bg-role-admin/10 text-role-admin', bar: 'bg-role-admin', dot: 'bg-role-admin' },
+  patient: { active: 'bg-role-patient/10 text-role-patient', dot: 'bg-role-patient', ring: 'ring-role-patient' },
+  reception: { active: 'bg-role-reception/10 text-role-reception', dot: 'bg-role-reception', ring: 'ring-role-reception' },
+  doctor: { active: 'bg-role-doctor/10 text-role-doctor', dot: 'bg-role-doctor', ring: 'ring-role-doctor' },
+  admin: { active: 'bg-role-admin/10 text-role-admin', dot: 'bg-role-admin', ring: 'ring-role-admin' },
 };
 
 /**
@@ -25,8 +23,7 @@ const ACCENTS = {
  * (PatientLayout, ReceptionLayout, DoctorLayout, AdminLayout) supply
  * `navItems` and `accent` — everything else about the shell is shared,
  * so the four panels are structurally consistent while still visually
- * distinct (their one accent color, drawn from the shared brand
- * palette).
+ * distinct (their one accent color).
  *
  * Responsive behavior: on md+ screens the sidebar is a static column,
  * always visible, exactly as before. Below md, it becomes an off-canvas
@@ -39,26 +36,14 @@ const DashboardShell = ({ roleLabel, accent, navItems }) => {
   const colors = ACCENTS[accent];
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const initials = (user?.fullName ?? '—')
-    .split(' ')
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-
   const sidebarContent = (
     <>
-      <div className="flex items-center gap-2.5 px-5 py-5">
-        <LogoMark size={30} />
-        <div className="leading-tight">
-          <p className="font-display text-sm font-bold tracking-tight text-ink">UpcharGanga</p>
-          <p className={`text-[11px] font-semibold uppercase tracking-wide ${colors.active.split(' ')[1]}`}>
-            {roleLabel}
-          </p>
-        </div>
+      <div className="flex items-center gap-2 px-5 py-5">
+        <span className={`h-2.5 w-2.5 rounded-full ${colors.dot}`} />
+        <span className="text-sm font-semibold tracking-tight text-ink">HealQ</span>
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-3">
+      <nav className="flex-1 space-y-1 px-3">
         {navItems.map(({ label, path, end }) => (
           <NavLink
             key={path}
@@ -66,32 +51,23 @@ const DashboardShell = ({ roleLabel, accent, navItems }) => {
             end={end}
             onClick={() => setIsDrawerOpen(false)}
             className={({ isActive }) =>
-              `relative block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? colors.active : 'text-ink-muted hover:bg-surface-muted hover:text-ink'
+              `block rounded px-3 py-2 text-sm font-medium transition-colors ${
+                isActive ? colors.active : 'text-ink-muted hover:bg-surface hover:text-ink'
               }`
             }
           >
-            {({ isActive }) => (
-              <>
-                {isActive && <span className={`absolute -left-3 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full ${colors.bar}`} />}
-                {label}
-              </>
-            )}
+            {label}
           </NavLink>
         ))}
       </nav>
 
       <div className="border-t border-surface-border px-4 py-4">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-muted text-xs font-semibold text-ink-muted">
-            {initials}
-          </span>
-          <p className="truncate text-sm font-medium text-ink">{user?.fullName ?? '—'}</p>
-        </div>
+        <p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">{roleLabel}</p>
+        <p className="mt-0.5 truncate text-sm font-medium text-ink">{user?.fullName ?? '—'}</p>
         <button
           type="button"
           onClick={logout}
-          className="mt-3 w-full rounded-lg border border-surface-border px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:border-ink hover:bg-ink hover:text-white"
+          className="mt-3 w-full rounded border border-surface-border px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:border-ink hover:bg-ink hover:text-white"
         >
           Log out
         </button>
@@ -104,14 +80,14 @@ const DashboardShell = ({ roleLabel, accent, navItems }) => {
       {/* Mobile top bar — hidden on md+, where the static sidebar takes over. */}
       <header className="flex items-center justify-between border-b border-surface-border bg-surface-card px-4 py-3 md:hidden">
         <div className="flex items-center gap-2">
-          <LogoMark size={28} />
-          <span className="font-display text-sm font-bold tracking-tight text-ink">UpcharGanga</span>
+          <span className={`h-2.5 w-2.5 rounded-full ${colors.dot}`} />
+          <span className="text-sm font-semibold tracking-tight text-ink">HealQ</span>
         </div>
         <button
           type="button"
           onClick={() => setIsDrawerOpen(true)}
           aria-label="Open menu"
-          className="rounded-lg p-1.5 text-ink-muted hover:bg-surface-muted"
+          className="rounded p-1.5 text-ink-muted hover:bg-surface"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
             <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

@@ -1,4 +1,3 @@
-import React from "react";
 const RANGE_OPTIONS = [
   { label: '7 days', value: 7 },
   { label: '14 days', value: 14 },
@@ -16,10 +15,10 @@ const DateRangeSelect = ({ value, onChange }) => (
         key={opt.value}
         type="button"
         onClick={() => onChange(opt.value)}
-        className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-smooth ${
+        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
           value === opt.value
-            ? 'bg-role-admin text-white shadow-soft-sm'
-            : 'bg-surface-muted text-ink-muted hover:bg-surface-border'
+            ? 'bg-role-admin text-white'
+            : 'bg-surface text-ink-muted hover:bg-surface-border'
         }`}
       >
         {opt.label}

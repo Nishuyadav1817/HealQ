@@ -55,32 +55,6 @@ const deleteDoctor = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, 'Doctor deactivated successfully.'));
 });
 
-const markUnavailable = asyncHandler(async (req, res) => {
-  const doctor = await doctorService.markUnavailable(
-    req.params.id,
-    req.body.date,
-    req.body.reason,
-    req.user._id
-  );
-  res
-    .status(201)
-    .json(new ApiResponse(201, { doctor }, 'Doctor marked unavailable successfully.'));
-});
-
-const removeUnavailability = asyncHandler(async (req, res) => {
-  const doctor = await doctorService.removeUnavailability(req.params.id, req.params.date);
-  res
-    .status(200)
-    .json(new ApiResponse(200, { doctor }, 'Doctor unavailability removed successfully.'));
-});
-
-const getUnavailability = asyncHandler(async (req, res) => {
-  const unavailability = await doctorService.getUnavailability(req.params.id);
-  res
-    .status(200)
-    .json(new ApiResponse(200, { unavailability }, 'Unavailability dates fetched successfully.'));
-});
-
 module.exports = {
   createDoctor,
   getDoctors,
@@ -89,7 +63,4 @@ module.exports = {
   assignHospital,
   assignDepartment,
   deleteDoctor,
-  markUnavailable,
-  removeUnavailability,
-  getUnavailability,
 };

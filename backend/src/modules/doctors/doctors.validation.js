@@ -55,15 +55,9 @@ const assignDepartmentSchema = Joi.object({
   department: objectId().required(),
 });
 
-const markUnavailableSchema = Joi.object({
-  date: Joi.date().min('now').required(), // future date or today
-  reason: Joi.string().trim().max(200).default('Doctor unavailable'),
-});
-
 module.exports = {
   createDoctorSchema,
   updateDoctorSchema,
   assignHospitalSchema,
   assignDepartmentSchema,
-  markUnavailableSchema,
 };

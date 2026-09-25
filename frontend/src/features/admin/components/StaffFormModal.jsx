@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from 'react';
 import Modal from '../../../components/ui/Modal';
 import Field from '../../../components/ui/Field';

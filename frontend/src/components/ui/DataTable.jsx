@@ -1,4 +1,3 @@
-import React from "react";
 import { Spinner, EmptyState, ErrorNotice } from './StateNotice';
 
 /**
@@ -7,9 +6,6 @@ import { Spinner, EmptyState, ErrorNotice } from './StateNotice';
  * a `render(row)` function per cell) and `rows` — everything about
  * loading/empty/error states and the responsive horizontal-scroll
  * wrapper lives here once instead of being re-implemented per page.
- * Purely presentational polish (sticky header, zebra rows, refined
- * hover) — the `columns`/`rows`/callback contract is unchanged, so no
- * caller needs to change.
  */
 const DataTable = ({
   columns,
@@ -29,40 +25,36 @@ const DataTable = ({
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-surface-border bg-surface-card shadow-soft-sm">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-surface-border bg-surface-muted">
+    <div className="overflow-x-auto rounded border border-surface-border bg-surface-card">
+      <table className="w-full min-w-[640px] text-left text-sm">
+        <thead>
+          <tr className="border-b border-surface-border bg-surface">
+            {columns.map((col) => (
+              <th
+                key={col.key}
+                className="whitespace-nowrap px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-subtle"
+              >
+                {col.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-surface-border">
+          {rows.map((row) => (
+            <tr
+              key={row[keyField]}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
+              className={onRowClick ? 'cursor-pointer hover:bg-surface' : undefined}
+            >
               {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="sticky top-0 whitespace-nowrap bg-surface-muted px-4 py-3 text-[11px] font-bold uppercase tracking-wide text-ink-subtle"
-                >
-                  {col.header}
-                </th>
+                <td key={col.key} className="whitespace-nowrap px-4 py-3 text-ink">
+                  {col.render ? col.render(row) : row[col.key]}
+                </td>
               ))}
             </tr>
-          </thead>
-          <tbody className="divide-y divide-surface-border">
-            {rows.map((row, idx) => (
-              <tr
-                key={row[keyField]}
-                onClick={onRowClick ? () => onRowClick(row) : undefined}
-                className={`transition-smooth duration-100 ${idx % 2 === 1 ? 'bg-surface/60' : ''} ${
-                  onRowClick ? 'cursor-pointer hover:bg-role-admin/5' : ''
-                }`}
-              >
-                {columns.map((col) => (
-                  <td key={col.key} className="whitespace-nowrap px-4 py-3.5 text-ink">
-                    {col.render ? col.render(row) : row[col.key]}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

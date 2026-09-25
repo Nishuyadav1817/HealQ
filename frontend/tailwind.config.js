@@ -1,65 +1,85 @@
+/** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './index.html',
-    './src/**/*.{js,jsx}',
-  ],
+  content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
-        // Brand/Primary colors
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c3d66',
+        // Neutral surface system — cool, clinical, calm. Deliberately NOT
+        // the cream/terracotta or near-black/neon defaults; a functional
+        // operations tool reads best as quiet and legible first.
+        surface: {
+          DEFAULT: '#F6F7F9', // app background
+          card: '#FFFFFF',
+          border: '#E4E7EC',
         },
+        ink: {
+          DEFAULT: '#101828', // primary text
+          muted: '#667085', // secondary text
+          subtle: '#98A2B3', // placeholders, disabled
+        },
+        // Shared brand accent — used for primary actions across every panel.
         brand: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c3d66',
+          50: '#EDFAF8',
+          100: '#D2F1EC',
+          500: '#0F8C82',
+          600: '#0C716A',
+          700: '#0A5B55',
         },
-        // Surface colors
-        surface: '#ffffff',
-        'surface-border': '#e5e7eb',
-        'surface-hover': '#f9fafb',
-        'surface-active': '#f3f4f6',
-        'surface-muted': '#f3f4f6',
-        'surface-card': '#ffffff',
-        // Text colors
-        ink: '#1f2937',
-        'ink-muted': '#6b7280',
-        'ink-subtle': '#9ca3af',
-        // Semantic colors
-        success: '#10b981',
-        'success-light': '#d1fae5',
-        danger: '#ef4444',
-        'danger-light': '#fee2e2',
-        warning: '#f59e0b',
-        'warning-light': '#fef3c7',
-        info: '#3b82f6',
-        'info-light': '#dbeafe',
+        // Each role gets its own restrained accent so the four panels feel
+        // like distinct places without breaking a shared structural
+        // language — this is the panels' one visual "signature," kept
+        // deliberately small (sidebar active state, badges) rather than
+        // repainting whole screens per role.
+        role: {
+          patient: { DEFAULT: '#0F8C82', soft: '#EDFAF8' }, // teal — calm, patient-facing
+          reception: { DEFAULT: '#B5560F', soft: '#FBEDE2' }, // warm clay — front-desk energy
+          doctor: { DEFAULT: '#33449E', soft: '#EBEDFA' }, // deep indigo — clinical focus
+          admin: { DEFAULT: '#4B5165', soft: '#EEEFF2' }, // graphite — neutral authority
+        },
+        danger: { DEFAULT: '#D92D20', soft: '#FEF3F2' },
+        success: { DEFAULT: '#0F8C5C', soft: '#EDFAF3' },
+
+        // HealQ — the patient-facing brand palette (classic clinical
+        // blue). Deliberately its OWN token family rather than a
+        // reassignment of `brand` or `role.patient` above: those two
+        // are load-bearing for every other panel's shared components
+        // (Button, Card, Field, Badge all reference `brand-*`), so
+        // recoloring them would repaint Admin/Reception/Doctor Assistant
+        // too. Patient-only components (features/patient/components/ui)
+        // reference `healq-*` instead, so the redesign is contained to
+        // exactly the patient-facing surface + the shared Login/Register
+        // screens.
+        healq: {
+          50: '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          500: '#2563EB',
+          600: '#1D4ED8',
+          700: '#1E40AF',
+          900: '#1E3A8A',
+        },
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        // A clean system stack by default — swap in a loaded face (e.g.
+        // Inter via @fontsource or a <link>) later without touching any
+        // component code, since everything references this token.
+        sans: [
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'Roboto',
+          'sans-serif',
+        ],
+        // Display face for the HealQ patient surface + auth screens only
+        // — a classic serif reads as "trustworthy clinic letterhead"
+        // rather than "SaaS dashboard," which is the whole point of a
+        // patient portal versus the operational panels.
+        serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
       },
-      boxShadow: {
-        'soft-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-      },
-      transitionDuration: {
-        'smooth': '200ms',
+      borderRadius: {
+        DEFAULT: '8px',
       },
     },
   },

@@ -1,4 +1,3 @@
-import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import ChartCard from '../../../../components/ui/ChartCard';
 
@@ -6,13 +5,13 @@ import ChartCard from '../../../../components/ui/ChartCard';
 // legend colors mean the same thing as the status pills used everywhere
 // else in the app.
 const STATUS_COLORS = {
-  pending: '#5B6B63',
-  confirmed: '#147D4F',
-  'checked-in': '#C48D0F',
-  'in-consultation': '#146F6C',
-  completed: '#147D4F',
-  cancelled: '#D0362C',
-  'no-show': '#D0362C',
+  pending: '#98A2B3',
+  confirmed: '#0F8C82',
+  'checked-in': '#B5560F',
+  'in-consultation': '#33449E',
+  completed: '#0F8C5C',
+  cancelled: '#D92D20',
+  'no-show': '#D92D20',
 };
 
 const STATUS_LABELS = {
@@ -29,7 +28,7 @@ const StatusBreakdownChart = ({ data = [], title = 'Appointments by Status', sub
   const chartData = data.map((row) => ({
     name: STATUS_LABELS[row.status] || row.status,
     value: row.count,
-    color: STATUS_COLORS[row.status] || '#5B6B63',
+    color: STATUS_COLORS[row.status] || '#98A2B3',
   }));
 
   return (
@@ -48,7 +47,7 @@ const StatusBreakdownChart = ({ data = [], title = 'Appointments by Status', sub
               <Cell key={entry.name} fill={entry.color} />
             ))}
           </Pie>
-          <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, borderColor: '#E3E7E2' }} />
+          <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, borderColor: '#E4E7EC' }} />
           <Legend wrapperStyle={{ fontSize: 11 }} />
         </PieChart>
       </ResponsiveContainer>

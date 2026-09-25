@@ -1,12 +1,11 @@
-import React from "react";
 /**
- * One label+control+error wrapper reused for every form field across
- * the operational panels. `as` switches the rendered control between
- * input/select/textarea while keeping label/error/spacing identical
- * everywhere.
+ * One label+control+error wrapper reused for every form field in the
+ * patient flow (register, login, booking form, profile edit). `as`
+ * switches the rendered control between input/select/textarea while
+ * keeping label/error/spacing identical everywhere.
  */
 const baseControlClasses =
-  'w-full rounded-lg border border-surface-border bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-subtle transition-smooth duration-150 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-100 disabled:bg-surface-muted disabled:text-ink-subtle';
+  'w-full rounded border border-surface-border bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-subtle focus:border-brand-500 focus:outline-none disabled:bg-surface disabled:text-ink-subtle';
 
 const Field = ({ label, error, as = 'input', className = '', children, id, ...rest }) => {
   const Control = as;
@@ -18,7 +17,7 @@ const Field = ({ label, error, as = 'input', className = '', children, id, ...re
       <Control
         id={controlId}
         className={`${baseControlClasses} ${as === 'textarea' ? 'min-h-[90px] resize-y' : ''} ${
-          error ? 'border-danger focus:border-danger focus:ring-danger/10' : ''
+          error ? 'border-danger' : ''
         }`}
         {...rest}
       >

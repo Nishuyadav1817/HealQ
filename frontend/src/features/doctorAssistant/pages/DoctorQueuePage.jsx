@@ -1,27 +1,32 @@
-import React from "react";
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../../context/AuthContext';
 import { Spinner, ErrorNotice, EmptyState } from '../../../components/ui/StateNotice';
-import { useDoctorSelection } from '../context/DoctorSelectionContext';
+import { useHospitalDoctors } from '../hooks/useHospitalDoctors';
 import { useQueue } from '../hooks/useQueue';
 import useQueueLiveUpdates from '../hooks/useQueueLiveUpdates';
 import QueueControls from '../components/QueueControls';
 import LiveIndicator from '../components/LiveIndicator';
 import CurrentPatientCard from '../components/CurrentPatientCard';
 import NextPatientCard from '../components/NextPatientCard';
-import TodayStats from '../components/TodayStats';
 import QueueList from '../components/QueueList';
 
-/**
- * Doctor Assistant's live queue board. Doctor/date selection now lives
- * in DoctorSelectionContext (shared with the header, see DoctorTopNav)
- * rather than local state — everything below still reads exactly the
- * same useQueue/useQueueLiveUpdates data it always did.
- *
- * Layout follows the clinical priority of the workflow, top to bottom:
- * the patient in front of the doctor right now, who's coming up next,
- * a quick read on the shape of the day, then the full remaining queue.
- */
+const todayISO = () => new Date().toISOString().slice(0, 10);
+
 const DoctorQueuePage = () => {
-  const { doctors, isLoadingDoctors, doctorId, setDoctorId, date, setDate, doctor } = useDoctorSelection();
+  const { user } = useAuth();
+  const { data: doctors, isLoading: isLoadingDoctors } = useHospitalDoctors(user?.hospital);
+
+  const [doctorId, setDoctorId] = useState('');
+  const [date, setDate] = useState(todayISO());
+
+  // Default to the first doctor once the list loads, so the board isn't
+  // just an empty dropdown the assistant has to act on before seeing
+  // anything.
+  useEffect(() => {
+    if (!doctorId && doctors?.length) {
+      setDoctorId(doctors[0]._id);
+    }
+  }, [doctors, doctorId]);
 
   const { data: queueView, isLoading, isError } = useQueue({ doctor: doctorId, date });
   const { isConnected } = useQueueLiveUpdates(doctorId, date);
@@ -33,9 +38,7 @@ const DoctorQueuePage = () => {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-ink">
-            {doctor ? `Dr. ${doctor.user?.fullName}'s Queue` : 'Doctor Assistant Dashboard'}
-          </h1>
+          <h1 className="text-xl font-semibold text-ink">Doctor Assistant Dashboard</h1>
           <p className="mt-1 text-sm text-ink-muted">Manage the live queue for a doctor's clinic day.</p>
         </div>
         {doctorId && <LiveIndicator isConnected={isConnected} />}
@@ -68,13 +71,8 @@ const DoctorQueuePage = () => {
 
           {!isLoading && !isError && (
             <>
-              {/* CURRENT PATIENT — highest priority, full width. */}
-              <div className="mt-6">
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
                 <CurrentPatientCard entry={queueView?.currentPatient} />
-              </div>
-
-              {/* NEXT PATIENT — who's coming up. */}
-              <div className="mt-4">
                 <NextPatientCard
                   next={next}
                   hasCurrentPatient={!!queueView?.currentPatient}
@@ -84,13 +82,7 @@ const DoctorQueuePage = () => {
                 />
               </div>
 
-              {/* TODAY'S STATISTICS */}
-              <div className="mt-6">
-                <TodayStats queueView={queueView} waitingList={waitingList} />
-              </div>
-
-              {/* LIVE QUEUE — everyone else waiting. */}
-              <div className="mt-6">
+              <div className="mt-4">
                 <QueueList entries={rest} totalWaiting={waitingList.length} />
               </div>
             </>

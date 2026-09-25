@@ -1,4 +1,3 @@
-import React from "react";
 /** Reflects this dashboard's socket connection state (see
  * useQueueLiveUpdates) — green pulse when live updates are actually
  * flowing, grey when the socket isn't connected so staff know to trust

@@ -1,17 +1,15 @@
-import React from "react";
 /**
- * Single reusable button used across every operational-panel screen.
- * Variant controls color/weight, `isLoading` swaps the label for an
- * inline spinner + disables the button so a slow request can never be
+ * Single reusable button used across every patient-facing screen. Variant
+ * controls color/weight, `isLoading` swaps the label for an inline
+ * spinner + disables the button so a slow request can never be
  * double-submitted by an impatient click.
  */
 const VARIANTS = {
-  primary:
-    'bg-primary-600 text-white shadow-soft-sm hover:bg-primary-700 focus-visible:ring-primary-500',
+  primary: 'bg-brand-500 text-white hover:bg-brand-600 focus-visible:ring-brand-500',
   secondary:
-    'bg-white text-ink border border-surface-border hover:border-ink/20 hover:bg-surface-muted focus-visible:ring-primary-500',
-  danger: 'bg-danger text-white shadow-soft-sm hover:bg-danger/90 focus-visible:ring-danger',
-  ghost: 'bg-transparent text-ink-muted hover:bg-surface-muted hover:text-ink',
+    'bg-white text-ink border border-surface-border hover:bg-surface focus-visible:ring-brand-500',
+  danger: 'bg-danger text-white hover:bg-danger/90 focus-visible:ring-danger',
+  ghost: 'bg-transparent text-ink-muted hover:bg-surface hover:text-ink',
 };
 
 const SIZES = {
@@ -33,7 +31,7 @@ const Button = ({
   <button
     type={type}
     disabled={disabled || isLoading}
-    className={`inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-smooth duration-150 disabled:cursor-not-allowed disabled:opacity-60 ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
+    className={`inline-flex items-center justify-center gap-2 rounded font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
     {...rest}
   >
     {isLoading && (

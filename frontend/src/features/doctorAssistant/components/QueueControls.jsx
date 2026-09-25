@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from 'react';
 import Field from '../../../components/ui/Field';
 import Button from '../../../components/ui/Button';
@@ -63,7 +62,7 @@ const QueueControls = ({
   };
 
   return (
-    <div className="rounded-lg border border-surface-border bg-surface-card p-4 shadow-soft-sm">
+    <div className="rounded border border-surface-border bg-surface-card p-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <Field className="sm:w-56" label="Doctor" as="select" value={doctorId} onChange={onDoctorChange}>

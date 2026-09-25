@@ -3,7 +3,6 @@ const app = require('./src/app');
 const connectDB = require('./src/config/db');
 const config = require('./src/config/env');
 const { initializeSocket } = require('./src/sockets/socket');
-const AppointmentExpirationJob = require('./src/jobs/appointmentExpiration.job');
 
 // Express and Socket.IO must share the SAME underlying HTTP server —
 // creating it explicitly here (rather than letting app.listen() create
@@ -14,9 +13,6 @@ const startServer = async () => {
   await connectDB();
 
   initializeSocket(httpServer);
-
-  // Start background jobs
-  AppointmentExpirationJob.startJob();
 
   httpServer.listen(config.port, () => {
     console.log(`[server] Running in ${config.env} mode on port ${config.port} (HTTP + Socket.IO)`);
@@ -36,4 +32,3 @@ process.on('uncaughtException', (err) => {
 });
 
 startServer();
-

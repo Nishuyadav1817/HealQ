@@ -1,26 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
- * Hook that returns a debounced value
- * Delays value updates until user stops typing/interacting
- * Useful for search inputs, live filtering, etc.
- *
- * @param {any} value - The value to debounce
- * @param {number} delay - Delay in milliseconds (default 300ms)
- * @returns {any} - The debounced value
+ * Delays reflecting `value` until it's stopped changing for `delayMs` —
+ * used on every free-text search box in the app (Reception's booking
+ * search, Admin's patient/appointment/hospital/doctor search) so a
+ * request doesn't fire on every keystroke, only once typing pauses.
+ * Promoted here from what used to be a copy-pasted local helper in
+ * ReceptionDashboardPage so every feature shares one implementation.
  */
-export const useDebouncedValue = (value, delay = 300) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+const useDebouncedValue = (value, delayMs = 400) => {
+  const [debounced, setDebounced] = useState(value);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+    const timer = setTimeout(() => setDebounced(value), delayMs);
+    return () => clearTimeout(timer);
+  }, [value, delayMs]);
 
-    return () => clearTimeout(handler);
-  }, [value, delay]);
-
-  return debouncedValue;
+  return debounced;
 };
 
 export default useDebouncedValue;
